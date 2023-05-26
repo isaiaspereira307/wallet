@@ -66,40 +66,40 @@ impl Transacao {
         println!("Valor: {:?}", self.valor);
         println!("Operação: {:?}", self.operacao);
         println!("Tipo: {:?}", self.tipo);
-        if let Some(_dia) = self.dia {
+        if self.dia.is_none() == false {
             println!("Dia: {:?}", self.dia);
         }
         println!("Mês: {:?}", self.mes);
-        if let Some(_ano) = self.ano {
-            println!("Ano: {:?}", self.ano);
+        if self.ano.is_none() == false {
+            println!("Ano: {:?}", self.ano.unwrap());
         }
-        println!("Categoria: {:?}", &self.categoria);
-        if let Some(_objetivo) = &self.objetivo {
-            println!("Objetivo: {:?}", &self.objetivo);
+        println!("Categoria: {:?}", self.categoria);
+        if self.objetivo.is_none() == false {
+            println!("Objetivo: {:?}", self.objetivo.as_ref().unwrap());
         }
-        if let Some(_tipo_investimento) = &self.tipo_investimento {
-            println!("Tipo de investimento: {:?}", self.tipo_investimento);
+        if self.tipo_investimento.is_none() == false {
+            println!("Tipo de investimento: {:?}", self.tipo_investimento.as_ref().unwrap());
         }
-        if let Some(_valor_cdb) = self.valor_cdb {
-            println!("Valor do CDB: {:?}", self.valor_cdb);
+        if self.valor_cdb.is_none() == false {
+            println!("Valor do CDB: {:?}", self.valor_cdb.unwrap());
         }
-        if let Some(_rendimento) = self.rendimento {
-            println!("Rendimento: {:?}", self.rendimento);
+        if self.rendimento.is_none() == false {
+            println!("Rendimento: {:?}", self.rendimento.unwrap());
         }
-        if let Some(_taxa) = self.taxa {
-            println!("Taxa: {:?}", &self.taxa);
+        if self.taxa.is_none() == false {
+            println!("Taxa: {:?}", self.taxa.unwrap());
         }
-        if let Some(_valor_cota) = self.valor_cota {
-            println!("Valor da cota: {:?}", &self.valor_cota);
+        if self.valor_cota.is_none() == false {
+            println!("Valor da cota: {:?}", self.valor_cota.unwrap());
         }
-        if let Some(_dividendos) = self.dividendos {
-            println!("Dividendos: {:?}", &self.dividendos);
+        if self.dividendos.is_none() == false {
+            println!("Dividendos: {:?}", self.dividendos.unwrap());
         }
-        if let Some(_numero_cotas) = self.numero_cotas {
-            println!("Número de cotas: {:?}", &self.numero_cotas);
+        if self.numero_cotas.is_none() == false {
+            println!("Número de cotas: {:?}", self.numero_cotas.unwrap());
         }
-        if let Some(_valor_bitcoin) = self.valor_bitcoin {
-            println!("Valor do bitcoin: {:?}", &self.valor_bitcoin);
+        if self.valor_bitcoin.is_none() == false {
+            println!("Valor do bitcoin: {:?}", self.valor_bitcoin.unwrap());
         }
         println!("-------------------------");
     }

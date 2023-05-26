@@ -5,6 +5,7 @@ use crate::walletlib::files::{
     remover,
     listar,
     editar,
+    detalhar,
     calcular_reserva_de_emergencia,
     calcular_renda_passiva,
     calcular_valor_de_uma_pericia,
@@ -27,12 +28,14 @@ pub fn header() {
     println!("-------------------------");
     println!("Sistema de Finanças Pessoais");
     println!("-------------------------");
-    println!("Total de receitas:  {:.2?}", total_receitas);
-    println!("Total de despesas:  {:.2?}", total_despesas);
-    println!("Comunhão de bens:   {:.2?}", comunhao_bens);
-    println!("Limite de despesas: {:.2?}", limite_depesa);
-    println!("Valor a guardar:    {:.2?}", valor_a_guardar);
-    println!("Saldo:              {:.2?}", total_receitas - total_despesas - comunhao_bens);
+    println!("Total de receitas:  R$ {:.2}", total_receitas);
+    println!("Total de despesas:  R$ {:.2}", total_despesas);
+    println!("Comunhão de bens:   R$ {:.2}", comunhao_bens);
+    println!();
+    println!("Limite de despesas: R$ {:.2}", limite_depesa);
+    println!("Valor a guardar:    R$ {:.2}", valor_a_guardar);
+    println!();
+    println!("Saldo:              R$ {:.2}", total_receitas - total_despesas - comunhao_bens);
     println!("-------------------------");
 }
 
@@ -65,9 +68,10 @@ fn menu_carteira() {
     println!("2 - Remover");
     println!("3 - Listar");
     println!("4 - Editar");
-    println!("5 - Voltar");
+    println!("5 - Detalhes");
+    println!("6 - Voltar");
     println!();
-    println!("6 - Sair");
+    println!("7 - Sair");
     let opcao = ler_input("Digite uma opção: ");
     match opcao.trim().parse::<i32>() {
         Ok(1) => adicionar(),
@@ -83,9 +87,13 @@ fn menu_carteira() {
             editar(id.trim().parse::<i32>().unwrap());
         },
         Ok(5) => {
+            let id = ler_input("Digite o id da transação: ");
+            detalhar(id.trim().parse::<i32>().unwrap());
+        }
+        Ok(6) => {
             menu_principal();
         },
-        Ok(6) => {
+        Ok(7) => {
             println!("Saindo...");
             std::process::exit(0);
         },
@@ -149,7 +157,8 @@ pub fn mostrar_opcoes_categoria() {
     println!("5 - Lazer");
     println!("6 - Educação");
     println!("7 - Saúde");
-    println!("8 - Outros");
+    println!("8 - Investimento");
+    println!("9 - Outros");
     println!("Digite uma opção de categoria: ");
 }
 

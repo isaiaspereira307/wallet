@@ -45,6 +45,13 @@ pub fn listar() {
     }
 }
 
+pub fn detalhar(id: i32) {
+    let file = ler_arquivo_json();
+    let transaction = file.iter()
+        .find(|x| x.id == id).unwrap();
+    transaction.detalhe();
+}
+
 pub fn editar(id: i32) {
     let mut file = ler_arquivo_json();
     let transaction = file.iter_mut()
