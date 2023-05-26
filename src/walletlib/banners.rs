@@ -13,7 +13,7 @@ use crate::walletlib::files::{
 use super::algorithms::{
     calcula_comunhao_bens,
     calcular_receita_despesa,
-    listar_investimentos
+    total_de_redimentos_mensal
 };
 
 
@@ -97,8 +97,7 @@ fn menu_carteira() {
 
 fn menu_investimento() {
     let file = ler_arquivo_json();
-    let investimentos = listar_investimentos(file);
-    let total_investido = investimentos.iter().fold(0.0, |acc, x| acc + x.valor);
+    let total_investido = total_de_redimentos_mensal(file);
     println!("-------------------------");
     println!("Investimentos");
     println!("Total investido: {:.2?}", total_investido);
@@ -152,4 +151,11 @@ pub fn mostrar_opcoes_categoria() {
     println!("7 - Saúde");
     println!("8 - Outros");
     println!("Digite uma opção de categoria: ");
+}
+
+pub fn mostrar_opcoes_tipos_investimentos() {
+    println!("-------------------------");
+    println!("1 - CDB");
+    println!("2 - FII");
+    println!("3 - Bitcoin");
 }

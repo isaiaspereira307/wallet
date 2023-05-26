@@ -66,39 +66,39 @@ impl Transacao {
         println!("Valor: {:?}", self.valor);
         println!("Operação: {:?}", self.operacao);
         println!("Tipo: {:?}", self.tipo);
-        if let Some(dia) = self.dia {
+        if let Some(_dia) = self.dia {
             println!("Dia: {:?}", self.dia);
         }
         println!("Mês: {:?}", self.mes);
-        if let Some(ano) = self.ano {
+        if let Some(_ano) = self.ano {
             println!("Ano: {:?}", self.ano);
         }
         println!("Categoria: {:?}", &self.categoria);
-        if let Some(objetivo) = &self.objetivo {
+        if let Some(_objetivo) = &self.objetivo {
             println!("Objetivo: {:?}", &self.objetivo);
         }
-        if let Some(tipo_investimento) = &self.tipo_investimento {
+        if let Some(_tipo_investimento) = &self.tipo_investimento {
             println!("Tipo de investimento: {:?}", self.tipo_investimento);
         }
-        if let Some(valor_cdb) = self.valor_cdb {
+        if let Some(_valor_cdb) = self.valor_cdb {
             println!("Valor do CDB: {:?}", self.valor_cdb);
         }
-        if let Some(rendimento) = self.rendimento {
+        if let Some(_rendimento) = self.rendimento {
             println!("Rendimento: {:?}", self.rendimento);
         }
-        if let Some(taxa) = self.taxa {
+        if let Some(_taxa) = self.taxa {
             println!("Taxa: {:?}", &self.taxa);
         }
-        if let Some(valor_cota) = self.valor_cota {
+        if let Some(_valor_cota) = self.valor_cota {
             println!("Valor da cota: {:?}", &self.valor_cota);
         }
-        if let Some(dividendos) = self.dividendos {
+        if let Some(_dividendos) = self.dividendos {
             println!("Dividendos: {:?}", &self.dividendos);
         }
-        if let Some(numero_cotas) = self.numero_cotas {
+        if let Some(_numero_cotas) = self.numero_cotas {
             println!("Número de cotas: {:?}", &self.numero_cotas);
         }
-        if let Some(valor_bitcoin) = self.valor_bitcoin {
+        if let Some(_valor_bitcoin) = self.valor_bitcoin {
             println!("Valor do bitcoin: {:?}", &self.valor_bitcoin);
         }
         println!("-------------------------");
@@ -135,38 +135,6 @@ pub enum Categoria {
 pub enum TipoInvestimento {
     Cdb,
     Fii,
-    Bitcoin
+    Bitcoin,
+    Nenhum
 }
-
-// pub struct Cdb {
-//     pub id: i32,
-//     pub descricao: String,
-//     pub valor: f32,
-//     pub dia: i32,
-//     pub mes: i32,
-//     pub ano: i32,
-//     pub valor_cdb: f32,
-//     pub rendimento: f32,
-//     pub taxa: f32,
-// }
-
-// pub struct Fii {
-//     pub id: i32,
-//     pub descricao: String,
-//     pub valor: f32,
-//     pub mes: i32,
-//     pub ano: i32,
-//     pub valor_cota: f32,
-//     pub dividendos: f32,
-//     pub numero_cotas: f32,
-// }
-
-// pub struct Bitcoin {
-//     pub id: i32,
-//     pub descricao: String,
-//     pub valor: f32,
-//     pub dia: i32,
-//     pub mes: i32,
-//     pub ano: i32,
-//     pub valor_bitcoin: f32,
-// }

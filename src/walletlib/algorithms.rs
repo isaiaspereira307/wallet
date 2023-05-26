@@ -20,27 +20,25 @@ pub fn listar_investimentos(transactions: Vec<Transacao>) -> Vec<Transacao> {
         .collect::<Vec<Transacao>>()
 }
 
-pub fn calculo_reserva_de_emergencia(saldo: f32, objetivo: f32, poupanca_mensal: f32, rentabilidade_mensal: f32) -> (i32, f32) {
-    let meses_protegido = 3.0;
-    let rentabilidade_anual = ((1.0 + rentabilidade_mensal )/12.0)-1.0;
+pub fn calculo_reserva_de_emergencia(valor_guardado_mensal: f32, objetivo: f32, rentabilidade_mensal: f32) -> (i32, f32) {
+    let _rentabilidade_anual = ((1.0 + rentabilidade_mensal )/12.0)-1.0;
     let mut valor_guardado = 0.0;
     let mut meses = 0;
     while valor_guardado <= objetivo {
-        valor_guardado = valor_guardado + ((saldo * poupanca_mensal) + ((valor_guardado + (saldo * poupanca_mensal))*(1.0 + rentabilidade_mensal)));
+        valor_guardado = (valor_guardado + valor_guardado_mensal)*(1.0 + rentabilidade_mensal);
         meses += 1;
     }
-    
     (meses, valor_guardado)
 }
 
-pub fn calculos_fii() -> f64 {
-    let dividendos = 0.57;
-    let numero_cotas = 10.0;
-    let valor_cota = 100.0;
+pub fn calculos_fii(transaction: &Transacao) -> f32 {
+    let dividendos = transaction.dividendos.unwrap();
+    let numero_cotas = transaction.numero_cotas.unwrap();
+    let valor_cota = transaction.valor_cota.unwrap();
     let valor_investido = numero_cotas * valor_cota;
-    let valor_dividendos = valor_investido * dividendos;
+    let _valor_dividendos = valor_investido * dividendos;
     let magic_number = (valor_cota / dividendos) - numero_cotas;
-    let valor_bola_de_neve = valor_cota * magic_number;
+    let _valor_bola_de_neve = valor_cota * magic_number;
     let valor_desejado = 3_000.0;
     let valor_necessario = (valor_desejado / dividendos) * magic_number;
     valor_necessario
@@ -69,6 +67,9 @@ pub fn calculo_pericia(horas_esperadas: i32) -> i32 {
     }
 }
 
-pub fn total_de_redimentos_mensal(transactions: Vec<Transacao>) {
+pub fn total_de_redimentos_mensal(transactions: Vec<Transacao>) -> f32 {
     let investimentos = listar_investimentos(transactions);
+    let total_investido = investimentos.iter()
+        .fold(0.0, |acc, transacao| acc + transacao.valor);
+    total_investido
 }
