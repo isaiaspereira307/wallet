@@ -69,25 +69,25 @@ pub fn editar(id: i32) {
     }
 }
 
-pub fn adicionar() {
-    let mut file: Vec<Transacao> = ler_arquivo_json();
-    println!("Tamanho do arquivo: {:?}", file.len());
-    let id = if file.len() != 0 { file[file.len()-1].id + 1 } else { 1 };
+pub fn adicionar() { 
+    let mut file: Vec<Transacao> = ler_arquivo_json(); 
+    println!("Tamanho do arquivo: {:?}", file.len()); 
+    let id = if file.len() != 0 { file[file.len()-1].id + 1 } else { 1 }; 
     let descricao = ler_input("Digite a descrição: ").trim().to_string();
     let valor = ler_input("Digite o valor: ").trim().parse::<f32>().unwrap();
     mostrar_opcoes_operacao();
     let opcao_operacao = ler_input("Digite a operação: ").trim().parse::<i32>().unwrap();
-    let operacao = match opcao_operacao {
+    let operacao = match opcao_operacao { 
         1 => Operacao::Despesa,
         2 => Operacao::Receita,
-        _ => Operacao::Despesa,
+        _ => Operacao::Despesa
     };
     mostrar_opcoes_tipo();
     let opcao_tipo = ler_input("Digite o tipo: ").trim().parse::<i32>().unwrap();
-    let tipo = match opcao_tipo {
+    let tipo = match opcao_tipo { 
         1 => Tipo::ValorFixo,
         2 => Tipo::ValorVariavel,
-        _ => Tipo::ValorVariavel,
+        _ => Tipo::ValorVariavel
     };
     mostrar_opcoes_categoria();
     let opcao_categoria = ler_input("Digite a categoria: ").trim().parse::<i32>().unwrap();
@@ -100,120 +100,78 @@ pub fn adicionar() {
         6 => Categoria::Educacao,
         7 => Categoria::Saude,
         8 => Categoria::Investimento,
-        _ => Categoria::Outros,
-    };
+        _ => Categoria::Outros, 
+    }; 
     if categoria == Categoria::Investimento {
         mostrar_opcoes_tipos_investimentos();
         let opcao_tipo_investimento = ler_input("Digite o tipo de investimento: ").trim().parse::<i32>().unwrap();
-        let tipo_investimento = match opcao_tipo_investimento {
-            1 => TipoInvestimento::Cdb,
-            2 => TipoInvestimento::Fii,
-            3 => TipoInvestimento::Bitcoin,
-            _ => TipoInvestimento::Nenhum,
-        };
-        let objetivo = ler_input("Digite o objetivo: ").trim().to_string();    
-        let dia = ler_input("Digite o dia: ").trim().parse::<i32>().unwrap();
-        let mes = ler_input("Digite o mês: ").trim().parse::<i32>().unwrap();
-        let ano = ler_input("Digite o ano: ").trim().parse::<i32>().unwrap();
-        if tipo_investimento == TipoInvestimento::Cdb {
-            let valor_cdb = ler_input("Digite o valor do CDB: ").trim().parse::<f32>().unwrap();
-            let rendimento = ler_input("Digite o rendimento: ").trim().parse::<f32>().unwrap();
-            let taxa = ler_input("Digite a taxa: ").trim().parse::<f32>().unwrap();
-            let new_transaction = Transacao::new(
-                id, 
-                descricao, 
-                valor,
-                operacao, 
-                tipo, 
-                categoria, 
-                Some(objetivo), 
-                Some(tipo_investimento), 
-                Some(dia), 
-                mes,
-                Some(ano),
-                Some(valor_cdb), 
-                Some(rendimento),
-                Some(taxa),
-                None,
-                None,
-                None,
-                None
-            );
-            file.push(new_transaction);
-            escrever_arquivo_json(file);
-            println!("Investimento adicionado");
-        } else if tipo_investimento == TipoInvestimento::Fii {
-            let valor_cota = ler_input("Digite o valor da cota: ").trim().parse::<f32>().unwrap();
-            let dividendos = ler_input("Digite os dividendos: ").trim().parse::<f32>().unwrap();
-            let numero_cotas = ler_input("Digite o número de cotas: ").trim().parse::<f32>().unwrap();
-            let new_transaction = Transacao::new(
-                id, 
-                descricao, 
-                valor,
-                operacao, 
-                tipo, 
-                categoria, 
-                Some(objetivo), 
-                Some(tipo_investimento), 
-                None, 
-                mes,
-                Some(ano),
-                None, 
-                None,
-                None,
-                Some(valor_cota),
-                Some(dividendos),
-                Some(numero_cotas),
-                None
-            );
-            file.push(new_transaction);
-            escrever_arquivo_json(file);
-            println!("Investimento adicionado");
-        } else if tipo_investimento == TipoInvestimento::Bitcoin {
-            let valor_bitcoin = ler_input("Digite o valor do bitcoin: ").trim().parse::<f32>().unwrap();
-            let new_transaction = Transacao::new(
-                id, 
-                descricao, 
-                valor,
-                operacao, 
-                tipo, 
-                categoria, 
-                Some(objetivo), 
-                Some(tipo_investimento), 
-                Some(dia), 
-                mes,
-                Some(ano),
-                None, 
-                None,
-                None,
-                None,
-                None,
-                None,
-                Some(valor_bitcoin)
-            );
-            file.push(new_transaction);
-            escrever_arquivo_json(file);
-            println!("Investimento adicionado");
-        } else if tipo_investimento == TipoInvestimento::Nenhum {
-            println!("Escolha inválida");
-            return;
-        }
-    } else {
-        let mes = ler_input("Digite o mês: ").trim().parse::<i32>().unwrap();
-        let transaction = Transacao {
-            id,
-            descricao,
-            valor,
-            operacao,
-            tipo,
-            categoria,
+        let (
+            tipo_investimento,
+            valor_cdb,
+            rendimento,
+            taxa,
+            numero_cotas,
+            valor_cota,
+            dividendos,
+            valor_bitcoin,
+            objetivo,
+            dia,
             mes,
-            ..Default::default()
+            ano
+        ) = match opcao_tipo_investimento { 
+            1 => { 
+                let objetivo = ler_input("Digite o objetivo: ").trim().to_string();
+                let dia = ler_input("Digite o dia: ").trim().parse::<i32>().unwrap();
+                let mes = ler_input("Digite o mês: ").trim().parse::<i32>().unwrap();
+                let ano = ler_input("Digite o ano: ").trim().parse::<i32>().unwrap();
+                let valor_cdb = ler_input("Digite o valor do CDB: ").trim().parse::<f32>().unwrap();
+                let rendimento = ler_input("Digite o rendimento: ").trim().parse::<f32>().unwrap();
+                let taxa = ler_input("Digite a taxa: ").trim().parse::<f32>().unwrap();
+                (Some(TipoInvestimento::Cdb), Some(valor_cdb), Some(rendimento), Some(taxa), None, None, None, None, Some(objetivo), Some(dia), Some(mes), Some(ano)) 
+            }, 
+            2 => { 
+                let objetivo = ler_input("Digite o objetivo: ").trim().to_string();
+                let mes = ler_input("Digite o mês: ").trim().parse::<i32>().unwrap();
+                let ano = ler_input("Digite o ano: ").trim().parse::<i32>().unwrap();
+                let valor_cota = ler_input("Digite o valor da cota: ").trim().parse::<f32>().unwrap();
+                let dividendos = ler_input("Digite os dividendos: ").trim().parse::<f32>().unwrap();
+                let numero_cotas = ler_input("Digite o número de cotas: ").trim().parse::<f32>().unwrap();
+                (Some(TipoInvestimento::Fii), None, None, None, Some(numero_cotas), Some(valor_cota), Some(dividendos), None, Some(objetivo), None, Some(mes), Some(ano))
+            }, 
+            3 => { 
+                let objetivo = ler_input("Digite o objetivo: ").trim().to_string();
+                let dia = ler_input("Digite o dia: ").trim().parse::<i32>().unwrap();
+                let mes = ler_input("Digite o mês: ").trim().parse::<i32>().unwrap();
+                let ano = ler_input("Digite o ano: ").trim().parse::<i32>().unwrap();
+                let valor_bitcoin = ler_input("Digite o valor do bitcoin: ").trim().parse::<f32>().unwrap();
+                (Some(TipoInvestimento::Bitcoin), None, None, None, None, None, None, Some(valor_bitcoin), Some(objetivo), Some(dia), Some(mes), Some(ano))
+            },
+            _ => {(None, None, None, None, None, None, None, None, None, None, None, None)}
         };
-        file.push(transaction);
+        let new_transaction = Transacao::new(
+            id, 
+            descricao, 
+            valor,
+            operacao, 
+            tipo, 
+            categoria, 
+            objetivo, 
+            tipo_investimento, 
+            dia,
+            mes.unwrap(),
+            ano,
+            valor_cdb,
+            rendimento,
+            taxa,
+            valor_cota,
+            dividendos,
+            numero_cotas,
+            valor_bitcoin
+        );
+        file.push(new_transaction);
         escrever_arquivo_json(file);
-        println!("Operação adicionada");
-    }
+        println!("Transação Adicionada");
+    };
 }
 
 pub fn calcular_reserva_de_emergencia() {
@@ -263,12 +221,14 @@ pub fn calcular_valor_de_uma_pericia() {
 
 pub fn calcular_valores_de_fiis() {
     let file = ler_arquivo_json();
-    let fiis = file.iter().filter(|&x| x.tipo_investimento == Some(TipoInvestimento::Fii)).collect::<Vec<_>>();
-    let mut fundos = Vec::new();
-    for fii in fiis {
-        let valor_restante = calculos_fii(fii);
-        fundos.push(valor_restante);
-    }
-    println!("Valor necessário total para viver de renda com FIIs: {:.2}", fundos.iter().sum::<f32>());
+    let fiis: Vec<_> = file
+        .iter()
+        .filter(|&transacao| transacao.tipo_investimento == Some(TipoInvestimento::Fii))
+        .collect();
+    let fundos: Vec<f32> = fiis.iter().map(|fii| calculos_fii(fii)).collect();
+    let dividendos: Vec<f32> = fiis.iter().map(|fii| fii.dividendos.unwrap()).collect();
+    let valor_total = fundos.iter().sum::<f32>();
+    let total_dividendos = dividendos.iter().sum::<f32>();
+    println!("Valor necessário total para viver de renda com FIIs: {:.2}", valor_total);
+    println!("Valor total dos dividendos dos FIIs: {:.2}", total_dividendos);
 }
-
