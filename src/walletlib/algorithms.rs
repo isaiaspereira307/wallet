@@ -1,12 +1,26 @@
-use crate::walletlib::objects::{Operacao, Transacao, Categoria};
+use std::println;
+
+use crate::walletlib::objects::{Operacao, Transacao, Categoria, Tipo};
+use chrono::{Local, Datelike};
+
 
 pub fn calcular_receita_despesa(transactions: Vec<Transacao>) -> (f32, f32) {
-    let total_receitas  = transactions.iter()
-        .filter(|transacao| transacao.operacao == Operacao::Receita)
+    let month = Local::now().month();
+    let receitas_fixas  = transactions.iter()
+        .filter(|transacao| transacao.operacao == Operacao::Receita && transacao.tipo == Tipo::ValorFixo)
         .fold(0.0, |acc, transacao| acc + transacao.valor);
-    let total_despesas = transactions.iter()
-        .filter(|transacao| transacao.operacao == Operacao::Despesa)
+    let receitas_variadas  = transactions.iter()
+        .filter(|transacao| transacao.operacao == Operacao::Receita && transacao.tipo == Tipo::ValorVariavel && transacao.mes.unwrap() == month)
         .fold(0.0, |acc, transacao| acc + transacao.valor);
+    let despesas_fixas = transactions.iter()
+        .filter(|transacao| transacao.operacao == Operacao::Despesa && transacao.tipo == Tipo::ValorFixo)
+        .fold(0.0, |acc, transacao| acc + transacao.valor);
+    let despesas_variadas = transactions.iter()
+        .filter(|transacao| transacao.operacao == Operacao::Despesa && transacao.tipo == Tipo::ValorVariavel && transacao.mes.unwrap() == month)
+        .fold(0.0, |acc, transacao| acc + transacao.valor);
+    println!("Receitas Fixas : {}", despesas_fixas);
+    let total_receitas = receitas_fixas + receitas_variadas;
+    let total_despesas = despesas_fixas + despesas_variadas;
     (total_receitas, total_despesas)
 }
 
@@ -21,13 +35,14 @@ pub fn listar_investimentos(transactions: Vec<Transacao>) -> Vec<Transacao> {
 }
 
 pub fn calculo_reserva_de_emergencia(valor_guardado_mensal: f32, objetivo: f32, rentabilidade_mensal: f32) -> (i32, f32) {
-    let _rentabilidade_anual = ((1.0 + rentabilidade_mensal )/12.0)-1.0;
+    let _rentabilidade_anual = ((1.0 + rentabilidade_mensal)/12.0)-1.0;
     let mut valor_guardado = 0.0;
-    let mut meses = 0;
-    while valor_guardado <= objetivo {
-        valor_guardado = (valor_guardado + valor_guardado_mensal)*(1.0 + rentabilidade_mensal);
-        meses += 1;
-    }
+    let meses = (0..).take_while(|_| {
+        valor_guardado <= objetivo && {
+            valor_guardado = (valor_guardado + valor_guardado_mensal) * (1.0 + rentabilidade_mensal);
+            true
+        }
+    }).count() as i32;
     (meses, valor_guardado)
 }
 

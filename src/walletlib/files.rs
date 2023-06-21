@@ -122,7 +122,7 @@ pub fn adicionar() {
             1 => { 
                 let objetivo = ler_input("Digite o objetivo: ").trim().to_string();
                 let dia = ler_input("Digite o dia: ").trim().parse::<i32>().unwrap();
-                let mes = ler_input("Digite o mês: ").trim().parse::<i32>().unwrap();
+                let mes = ler_input("Digite o mês: ").trim().parse::<u32>().unwrap();
                 let ano = ler_input("Digite o ano: ").trim().parse::<i32>().unwrap();
                 let valor_cdb = ler_input("Digite o valor do CDB: ").trim().parse::<f32>().unwrap();
                 let rendimento = ler_input("Digite o rendimento: ").trim().parse::<f32>().unwrap();
@@ -131,7 +131,7 @@ pub fn adicionar() {
             }, 
             2 => { 
                 let objetivo = ler_input("Digite o objetivo: ").trim().to_string();
-                let mes = ler_input("Digite o mês: ").trim().parse::<i32>().unwrap();
+                let mes = ler_input("Digite o mês: ").trim().parse::<u32>().unwrap();
                 let ano = ler_input("Digite o ano: ").trim().parse::<i32>().unwrap();
                 let valor_cota = ler_input("Digite o valor da cota: ").trim().parse::<f32>().unwrap();
                 let dividendos = ler_input("Digite os dividendos: ").trim().parse::<f32>().unwrap();
@@ -141,7 +141,7 @@ pub fn adicionar() {
             3 => { 
                 let objetivo = ler_input("Digite o objetivo: ").trim().to_string();
                 let dia = ler_input("Digite o dia: ").trim().parse::<i32>().unwrap();
-                let mes = ler_input("Digite o mês: ").trim().parse::<i32>().unwrap();
+                let mes = ler_input("Digite o mês: ").trim().parse::<u32>().unwrap();
                 let ano = ler_input("Digite o ano: ").trim().parse::<i32>().unwrap();
                 let valor_bitcoin = ler_input("Digite o valor do bitcoin: ").trim().parse::<f32>().unwrap();
                 (Some(TipoInvestimento::Bitcoin), None, None, None, None, None, None, Some(valor_bitcoin), Some(objetivo), Some(dia), Some(mes), Some(ano))
@@ -158,7 +158,7 @@ pub fn adicionar() {
             objetivo, 
             tipo_investimento, 
             dia,
-            mes.unwrap(),
+            mes,
             ano,
             valor_cdb,
             rendimento,
@@ -170,21 +170,46 @@ pub fn adicionar() {
         );
         file.push(new_transaction);
         escrever_arquivo_json(file);
-        println!("Transação Adicionada");
-    };
+        println!("Investimento Adicionado");
+    } else {
+        let new_transaction = Transacao::new(
+            id, 
+            descricao,
+            valor,
+            operacao, 
+            tipo, 
+            categoria, 
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None
+        );
+        file.push(new_transaction);
+        escrever_arquivo_json(file);
+        println!("Transação Adicionada");  
+    }
 }
 
 pub fn calcular_reserva_de_emergencia() {
     let file = ler_arquivo_json();
     let (total_receitas, total_despesas) = calcular_receita_despesa(file);
-    let percentual_a_guardar = 0.3;
-    let limite_de_despesas = total_receitas * 0.7;
+    let percentual_a_guardar = 0.55;
+    let limite_de_despesas = 0.45 * total_receitas;
     if total_despesas > limite_de_despesas {
-        println!("Você gastou mais do que 70% da sua receita");
+        println!("Você gastou mais do que 45% da sua receita");
         let diferenca = total_despesas - limite_de_despesas;
-        println!("Você precisa reduzir suas despesas em {} para atingir o limite de 70% da sua receita", diferenca);
+        println!("Você precisa reduzir suas despesas em {} para atingir o limite de 45% da sua receita", diferenca);
     } else {
-        println!("Você está gastando menos do que 70% da sua receita");
+        println!("--------------------------");
+        println!("Você está gastando menos do que 45% da sua receita");
         let objetivo = 12_000.0;
         let rentabilidade_mensal = 0.04;
         let valor_guardado_mensal = total_receitas * percentual_a_guardar;
@@ -198,17 +223,21 @@ pub fn calcular_reserva_de_emergencia() {
 pub fn calcular_renda_passiva(){
     let file = ler_arquivo_json();
     let (total_receitas, total_despesas) = calcular_receita_despesa(file);
-    let percentual_a_guardar = 0.3;
-    let limite_de_despesas = total_receitas * 0.7;
+    let percentual_a_guardar = 0.55;
+    let limite_de_despesas = 0.45 * total_receitas;
     if total_despesas > limite_de_despesas {
-        println!("Você gastou mais do que 70% da sua receita");
+        println!("Você gastou mais do que 45% da sua receita");
     } else {
-        println!("Você está gastando menos do que 70% da sua receita");
+        println!("Você está gastando menos do que 45% da sua receita");
         let objetivo = 10_000.0;
         let rentabilidade_mensal = 0.04;
         let (meses, valor_guardado) = calculo_de_renda_passiva(total_receitas, objetivo, percentual_a_guardar, rentabilidade_mensal);
-        println!("Meses para atingir o objetivo: {}", meses);
-        println!("Valor guardado no período: {}", valor_guardado);
+        if meses >= 12 {
+            println!("Anos para atingir o objetivo: {}", meses/12);
+        } else {
+            println!("Meses para atingir o objetivo: {}", meses);
+        }
+        println!("Valor guardado no período: R$ {:.2}", valor_guardado);
     }
     
 }

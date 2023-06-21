@@ -12,7 +12,7 @@ pub struct Transacao {
     pub objetivo: Option<String>,
     pub tipo_investimento: Option<TipoInvestimento>,
     pub dia: Option<i32>,
-    pub mes: i32,
+    pub mes: Option<u32>,
     pub ano: Option<i32>,
     pub valor_cdb: Option<f32>,
     pub rendimento: Option<f32>,
@@ -24,7 +24,7 @@ pub struct Transacao {
 }
 
 impl Transacao {
-    pub fn new(id: i32, descricao: String, valor: f32, operacao: Operacao, tipo: Tipo, categoria: Categoria, objetivo: Option<String>, tipo_investimento: Option<TipoInvestimento>, dia: Option<i32>, mes: i32, ano: Option<i32>, valor_cdb: Option<f32>, rendimento: Option<f32>, taxa: Option<f32>, valor_cota: Option<f32>, dividendos: Option<f32>, numero_cotas: Option<f32>, valor_bitcoin: Option<f32>) -> Transacao {
+    pub fn new(id: i32, descricao: String, valor: f32, operacao: Operacao, tipo: Tipo, categoria: Categoria, objetivo: Option<String>, tipo_investimento: Option<TipoInvestimento>, dia: Option<i32>, mes: Option<u32>, ano: Option<i32>, valor_cdb: Option<f32>, rendimento: Option<f32>, taxa: Option<f32>, valor_cota: Option<f32>, dividendos: Option<f32>, numero_cotas: Option<f32>, valor_bitcoin: Option<f32>) -> Transacao {
         Transacao {
             id: id,
             descricao: descricao,
@@ -69,7 +69,9 @@ impl Transacao {
         if self.dia.is_none() == false {
             println!("Dia: {:?}", self.dia);
         }
-        println!("Mês: {:?}", self.mes);
+        if self.mes.is_none() == false {
+            println!("Mês: {:?}", self.mes);
+        }
         if self.ano.is_none() == false {
             println!("Ano: {:?}", self.ano.unwrap());
         }
