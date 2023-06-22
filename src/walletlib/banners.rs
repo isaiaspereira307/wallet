@@ -20,11 +20,11 @@ use super::algorithms::{
 
 
 pub fn header() {
-    let file = ler_arquivo_json();
-    let (total_receitas, total_despesas) = calcular_receita_despesa(file);
+    let (total_receitas, total_despesas) = calcular_receita_despesa();
     let comunhao_bens = calcula_comunhao_bens(total_receitas);
     let limite_depesa = 0.45 * total_receitas;
-    let valor_a_guardar = total_receitas - limite_depesa;
+    let valor_a_guardar = 0.30 * total_receitas;
+    let valor_a_investir = 0.25 * total_receitas;
     println!("-------------------------");
     println!("Sistema de Finanças Pessoais");
     println!("-------------------------");
@@ -34,6 +34,7 @@ pub fn header() {
     println!();
     println!("Limite de despesas: R$ {:.2}", limite_depesa);
     println!("Valor a guardar:    R$ {:.2}", valor_a_guardar);
+    println!("Valor a Investir:    R$ {:.2}", valor_a_investir);
     println!();
     println!("Saldo:              R$ {:.2}", total_receitas - total_despesas - comunhao_bens);
     println!("-------------------------");

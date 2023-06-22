@@ -4,6 +4,7 @@ use crate::walletlib::objects::{Transacao, Operacao, Tipo, Categoria, TipoInvest
 use crate::walletlib::banners::{mostrar_opcoes_categoria, mostrar_opcoes_operacao, mostrar_opcoes_tipo, mostrar_opcoes_tipos_investimentos};
 use crate::walletlib::algorithms::{calcular_receita_despesa, calculo_reserva_de_emergencia, calculos_fii, calculo_de_renda_passiva, calculo_pericia};
 
+
 pub fn ler_arquivo_json() -> Vec<Transacao> {
     let mut file = File::open("data.json").expect("Arquivo não encontrado");
     let mut contents = String::new();
@@ -199,8 +200,7 @@ pub fn adicionar() {
 }
 
 pub fn calcular_reserva_de_emergencia() {
-    let file = ler_arquivo_json();
-    let (total_receitas, total_despesas) = calcular_receita_despesa(file);
+    let (total_receitas, total_despesas) = calcular_receita_despesa();
     let percentual_a_guardar = 0.55;
     let limite_de_despesas = 0.45 * total_receitas;
     if total_despesas > limite_de_despesas {
@@ -221,8 +221,7 @@ pub fn calcular_reserva_de_emergencia() {
 }
 
 pub fn calcular_renda_passiva(){
-    let file = ler_arquivo_json();
-    let (total_receitas, total_despesas) = calcular_receita_despesa(file);
+    let (total_receitas, total_despesas) = calcular_receita_despesa();
     let percentual_a_guardar = 0.55;
     let limite_de_despesas = 0.45 * total_receitas;
     if total_despesas > limite_de_despesas {

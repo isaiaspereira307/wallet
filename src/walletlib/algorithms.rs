@@ -1,10 +1,10 @@
-use std::println;
-
+use crate::walletlib::files::ler_arquivo_json;
 use crate::walletlib::objects::{Operacao, Transacao, Categoria, Tipo};
 use chrono::{Local, Datelike};
 
 
-pub fn calcular_receita_despesa(transactions: Vec<Transacao>) -> (f32, f32) {
+pub fn calcular_receita_despesa() -> (f32, f32) {
+    let transactions = ler_arquivo_json();
     let month = Local::now().month();
     let receitas_fixas  = transactions.iter()
         .filter(|transacao| transacao.operacao == Operacao::Receita && transacao.tipo == Tipo::ValorFixo)
