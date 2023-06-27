@@ -1,8 +1,7 @@
 use std::fs::File;
 use std::io::prelude::*;
-use crate::walletlib::objects::{Transacao, Operacao, Tipo, Categoria, TipoInvestimento};
-use crate::walletlib::banners::{mostrar_opcoes_categoria, mostrar_opcoes_operacao, mostrar_opcoes_tipo, mostrar_opcoes_tipos_investimentos};
-use crate::walletlib::algorithms::{calcular_receita_despesa, calculo_reserva_de_emergencia, calculos_fii, calculo_de_renda_passiva, calculo_pericia};
+use crate::walletlib::objects::{Transacao, Operacao, Tipo, Categoria};
+use crate::walletlib::banners::{mostrar_opcoes_categoria, mostrar_opcoes_operacao, mostrar_opcoes_tipo};
 
 
 pub fn ler_arquivo_json() -> Vec<Transacao> {
@@ -100,78 +99,24 @@ pub fn adicionar() {
         5 => Categoria::Lazer,
         6 => Categoria::Educacao,
         7 => Categoria::Saude,
-        8 => Categoria::Investimento,
         _ => Categoria::Outros, 
     }; 
-    if categoria == Categoria::Investimento {
-        mostrar_opcoes_tipos_investimentos();
-        let opcao_tipo_investimento = ler_input("Digite o tipo de investimento: ").trim().parse::<i32>().unwrap();
-        let (
-            tipo_investimento,
-            valor_cdb,
-            rendimento,
-            taxa,
-            numero_cotas,
-            valor_cota,
-            dividendos,
-            valor_bitcoin,
-            objetivo,
-            dia,
-            mes,
-            ano
-        ) = match opcao_tipo_investimento { 
-            1 => { 
-                let objetivo = ler_input("Digite o objetivo: ").trim().to_string();
-                let dia = ler_input("Digite o dia: ").trim().parse::<i32>().unwrap();
-                let mes = ler_input("Digite o mês: ").trim().parse::<u32>().unwrap();
-                let ano = ler_input("Digite o ano: ").trim().parse::<i32>().unwrap();
-                let valor_cdb = ler_input("Digite o valor do CDB: ").trim().parse::<f32>().unwrap();
-                let rendimento = ler_input("Digite o rendimento: ").trim().parse::<f32>().unwrap();
-                let taxa = ler_input("Digite a taxa: ").trim().parse::<f32>().unwrap();
-                (Some(TipoInvestimento::Cdb), Some(valor_cdb), Some(rendimento), Some(taxa), None, None, None, None, Some(objetivo), Some(dia), Some(mes), Some(ano)) 
-            }, 
-            2 => { 
-                let objetivo = ler_input("Digite o objetivo: ").trim().to_string();
-                let mes = ler_input("Digite o mês: ").trim().parse::<u32>().unwrap();
-                let ano = ler_input("Digite o ano: ").trim().parse::<i32>().unwrap();
-                let valor_cota = ler_input("Digite o valor da cota: ").trim().parse::<f32>().unwrap();
-                let dividendos = ler_input("Digite os dividendos: ").trim().parse::<f32>().unwrap();
-                let numero_cotas = ler_input("Digite o número de cotas: ").trim().parse::<f32>().unwrap();
-                (Some(TipoInvestimento::Fii), None, None, None, Some(numero_cotas), Some(valor_cota), Some(dividendos), None, Some(objetivo), None, Some(mes), Some(ano))
-            }, 
-            3 => { 
-                let objetivo = ler_input("Digite o objetivo: ").trim().to_string();
-                let dia = ler_input("Digite o dia: ").trim().parse::<i32>().unwrap();
-                let mes = ler_input("Digite o mês: ").trim().parse::<u32>().unwrap();
-                let ano = ler_input("Digite o ano: ").trim().parse::<i32>().unwrap();
-                let valor_bitcoin = ler_input("Digite o valor do bitcoin: ").trim().parse::<f32>().unwrap();
-                (Some(TipoInvestimento::Bitcoin), None, None, None, None, None, None, Some(valor_bitcoin), Some(objetivo), Some(dia), Some(mes), Some(ano))
-            },
-            _ => {(None, None, None, None, None, None, None, None, None, None, None, None)}
-        };
+    if tipo == Tipo::ValorVariavel {
+        let mes = ler_input("Digite o mês: ").trim().parse::<u32>().unwrap();
+        let ano = ler_input("Digite o ano: ").trim().parse::<i32>().unwrap();
         let new_transaction = Transacao::new(
             id, 
             descricao, 
             valor,
             operacao, 
             tipo, 
-            categoria, 
-            objetivo, 
-            tipo_investimento, 
-            dia,
-            mes,
-            ano,
-            valor_cdb,
-            rendimento,
-            taxa,
-            valor_cota,
-            dividendos,
-            numero_cotas,
-            valor_bitcoin
+            categoria,
+            Some(mes),
+            Some(ano),
         );
         file.push(new_transaction);
         escrever_arquivo_json(file);
-        println!("Investimento Adicionado");
+        println!("Transação Adicionada");
     } else {
         let new_transaction = Transacao::new(
             id, 
@@ -182,81 +127,9 @@ pub fn adicionar() {
             categoria, 
             None,
             None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None
         );
         file.push(new_transaction);
         escrever_arquivo_json(file);
         println!("Transação Adicionada");  
     }
-}
-
-pub fn calcular_reserva_de_emergencia() {
-    let (total_receitas, total_despesas) = calcular_receita_despesa();
-    let percentual_a_guardar = 0.55;
-    let limite_de_despesas = 0.45 * total_receitas;
-    if total_despesas > limite_de_despesas {
-        println!("Você gastou mais do que 45% da sua receita");
-        let diferenca = total_despesas - limite_de_despesas;
-        println!("Você precisa reduzir suas despesas em {} para atingir o limite de 45% da sua receita", diferenca);
-    } else {
-        println!("--------------------------");
-        println!("Você está gastando menos do que 45% da sua receita");
-        let objetivo = 12_000.0;
-        let rentabilidade_mensal = 0.04;
-        let valor_guardado_mensal = total_receitas * percentual_a_guardar;
-        let (meses, valor_guardado) = calculo_reserva_de_emergencia(valor_guardado_mensal, objetivo, rentabilidade_mensal);
-        println!("Para ter uma reserva de emergência que cubra 6 meses com 3 mil cada mês.");
-        println!("Meses para atingir o objetivo: {}", meses);
-        println!("Valor guardado no período: {}", valor_guardado);
-    }    
-}
-
-pub fn calcular_renda_passiva(){
-    let (total_receitas, total_despesas) = calcular_receita_despesa();
-    let percentual_a_guardar = 0.55;
-    let limite_de_despesas = 0.45 * total_receitas;
-    if total_despesas > limite_de_despesas {
-        println!("Você gastou mais do que 45% da sua receita");
-    } else {
-        println!("Você está gastando menos do que 45% da sua receita");
-        let objetivo = 10_000.0;
-        let rentabilidade_mensal = 0.04;
-        let (meses, valor_guardado) = calculo_de_renda_passiva(total_receitas, objetivo, percentual_a_guardar, rentabilidade_mensal);
-        if meses >= 12 {
-            println!("Anos para atingir o objetivo: {}", meses/12);
-        } else {
-            println!("Meses para atingir o objetivo: {}", meses);
-        }
-        println!("Valor guardado no período: R$ {:.2}", valor_guardado);
-    }
-    
-}
-
-pub fn calcular_valor_de_uma_pericia() {
-    let horas_esperadas = ler_input("Digite as horas esperadas: ").trim().parse::<i32>().unwrap();
-    let honrarios = calculo_pericia(horas_esperadas);
-    println!("O valor da perícia é de: {}", honrarios);
-}
-
-pub fn calcular_valores_de_fiis() {
-    let file = ler_arquivo_json();
-    let fiis: Vec<_> = file
-        .iter()
-        .filter(|&transacao| transacao.tipo_investimento == Some(TipoInvestimento::Fii))
-        .collect();
-    let fundos: Vec<f32> = fiis.iter().map(|fii| calculos_fii(fii)).collect();
-    let dividendos: Vec<f32> = fiis.iter().map(|fii| fii.dividendos.unwrap()).collect();
-    let valor_total = fundos.iter().sum::<f32>();
-    let total_dividendos = dividendos.iter().sum::<f32>();
-    println!("Valor necessário total para viver de renda com FIIs: {:.2}", valor_total);
-    println!("Valor total dos dividendos dos FIIs: {:.2}", total_dividendos);
 }

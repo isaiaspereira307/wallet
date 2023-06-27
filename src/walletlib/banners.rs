@@ -1,20 +1,14 @@
 use crate::walletlib::files::{
-    ler_arquivo_json,
     ler_input,
     adicionar,
     remover,
     listar,
     editar,
     detalhar,
-    calcular_reserva_de_emergencia,
-    calcular_renda_passiva,
-    calcular_valor_de_uma_pericia,
-    calcular_valores_de_fiis
 };
 use super::algorithms::{
     calcula_comunhao_bens,
     calcular_receita_despesa,
-    total_de_redimentos_mensal
 };
 
 
@@ -43,15 +37,11 @@ pub fn header() {
 pub fn menu_principal() {
     header();
     println!("1 - Carteira");
-    println!("2 - Investimentos");
     println!("3 - Sair");
     let opcao = ler_input("Digite uma opção: ");
     match opcao.trim().parse::<i32>() {
         Ok(1) => {
             menu_carteira();
-        },
-        Ok(2) => {
-            menu_investimento();
         },
         Ok(3) => {
             println!("Saindo...");
@@ -104,37 +94,6 @@ fn menu_carteira() {
     }
 }
 
-fn menu_investimento() {
-    let file = ler_arquivo_json();
-    let total_investido = total_de_redimentos_mensal(file);
-    println!("-------------------------");
-    println!("Investimentos");
-    println!("Total investido: {:.2?}", total_investido);
-    println!("-------------------------");
-    println!("1 - Reserva de emergência");
-    println!("2 - Renda Passiva");
-    println!("3 - FII");
-    println!("4 - Pericia");
-    println!("5 - Voltar");
-    println!();
-    println!("6 - Sair");
-    let opcao = ler_input("Digite uma opção: ");
-    match opcao.trim().parse::<i32>() {
-        Ok(1) => calcular_reserva_de_emergencia(),
-        Ok(2) => calcular_renda_passiva(),
-        Ok(3) => calcular_valores_de_fiis(),
-        Ok(4) => calcular_valor_de_uma_pericia(),
-        Ok(5) => menu_principal(),
-        Ok(6) => {
-            println!("Saindo...");
-            std::process::exit(0);
-        },
-        _ => {
-            println!("Opção inválida");
-        }       
-    }
-}
-
 pub fn mostrar_opcoes_tipo() {
     println!("-------------------------");
     println!("1 - Valor Fixo");
@@ -146,7 +105,6 @@ pub fn mostrar_opcoes_operacao() {
     println!("-------------------------");
     println!("1 - Despesa");
     println!("2 - Receita");
-    println!("Digite uma opção de operação: ");
 }
 
 pub fn mostrar_opcoes_categoria() {
@@ -158,14 +116,5 @@ pub fn mostrar_opcoes_categoria() {
     println!("5 - Lazer");
     println!("6 - Educação");
     println!("7 - Saúde");
-    println!("8 - Investimento");
-    println!("9 - Outros");
-    println!("Digite uma opção de categoria: ");
-}
-
-pub fn mostrar_opcoes_tipos_investimentos() {
-    println!("-------------------------");
-    println!("1 - CDB");
-    println!("2 - FII");
-    println!("3 - Bitcoin");
+    println!("8 - Outros");
 }
