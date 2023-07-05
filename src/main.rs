@@ -1,5 +1,8 @@
 mod walletlib;
 mod investmentlib;
+mod filemanager;
+mod objects;
+mod algorithms;
 use walletlib::banners::{menu_principal};
 
 // fn menu_principal() {
