@@ -1,146 +1,66 @@
-use serde::{Deserialize, Serialize};
+use serde::{Serialize, Deserialize};
 
+#[derive(Debug, Serialize, Deserialize, PartialEq, Default)]
+pub enum Operation {
+    #[default]
+    Redemption,
+    Deposit,
+}
+
+#[derive(Debug, Serialize, Deserialize, PartialEq, Default)]
+pub enum Type {
+    #[default]
+    FixedValue,
+    VariableValue,
+}
+
+#[derive(Debug, Serialize, Deserialize, PartialEq, Default)]
+pub enum TypeInvestment {
+    #[default]
+    RendaFixa,
+    Bitcoin,
+}
 
 #[derive(Debug, Serialize, Deserialize, Default)]
-pub struct Transacao {
+pub struct Transaction {
     pub id: i32,
-    pub descricao: String,
-    pub valor: f32,
-    pub operacao: Operacao,
-    pub tipo: Tipo,
-    pub categoria: Categoria,
-    pub mes: Option<u32>,
-    pub ano: Option<i32>,
+    pub description: String,
+    pub amount: f64,
+    pub operation: Operation,
+    pub type_transaction: Type,
+    pub type_investment: Option<TypeInvestment>,
+    pub month: Option<u32>,
+    pub year: Option<u32>,
 }
 
-impl Transacao {
-    pub fn new(id: i32, descricao: String, valor: f32, operacao: Operacao, tipo: Tipo, categoria: Categoria, mes: Option<u32>, ano: Option<i32>) -> Transacao {
-        Transacao {
-            id: id,
-            descricao: descricao,
-            valor: valor,
-            operacao: operacao,
-            tipo: tipo,
-            categoria: categoria,
-            mes: mes,
-            ano: ano,
-        }
-    }
-    
-    pub fn listar(&self) {
+// Implementing Wallet trait for Transaction
+impl Transaction {
+    pub fn list(&self) {
         println!("-------------------------");
         println!("Id: {:?}", &self.id);
-        println!("Descrição: {:?}", &self.descricao);
-        println!("Valor: {:?}", &self.valor);
-        println!("Operação: {:?}", &self.operacao);
-        println!("Tipo: {:?}", &self.tipo);
-        println!("Mês: {:?}", &self.mes);
-        println!("Categoria: {:?}", &self.categoria);
+        println!("Transaction details: {:?}", self.description);
+        println!("Amount: {:?}", self.amount);
+        println!("Operation: {:?}", self.operation);
+        println!("Type: {:?}", self.type_transaction);
         println!("-------------------------");
     }
 
-    pub fn detalhe(&self) {
+    pub fn details(&self) {
         println!("-------------------------");
         println!("Id: {:?}", self.id);
-        println!("Descrição: {:?}", self.descricao);
-        println!("Valor: {:?}", self.valor);
-        println!("Operação: {:?}", self.operacao);
-        println!("Tipo: {:?}", self.tipo);
-        if self.mes.is_none() == false {
-            println!("Mês: {:?}", self.mes);
+        println!("Transaction details: {:?}", self.description);
+        println!("Amount: {:?}", self.amount);
+        println!("Operation: {:?}", self.operation);
+        println!("Type: {:?}", self.type_transaction);
+        if self.type_investment.is_none() == false {
+            println!("Type Investment: {:?}", self.type_investment);
         }
-        if self.ano.is_none() == false {
-            println!("Ano: {:?}", self.ano.unwrap());
+        if self.month.is_none() == false {
+            println!("Month: {:?}", self.month);
         }
-        println!("Categoria: {:?}", self.categoria);
-        println!("-------------------------");
-    }
-}
-
-
-#[derive(Debug, Serialize, Deserialize, PartialEq, Default)]
-pub enum Operacao {
-    #[default] Resgate,
-    Deposito,
-}
-
-#[derive(Debug, Serialize, Deserialize, PartialEq, Default)]
-pub enum Tipo {
-    #[default] ValorFixo,
-    ValorVariavel,
-}
-
-#[derive(Debug, Serialize, Deserialize, PartialEq, Default)]
-pub enum Categoria {
-    Salario,
-    RendaExtra,
-    Alimentacao,
-    Transporte,
-    Lazer,
-    Educacao,
-    Saude,
-    #[default] Outros,
-}
-
-
-
-
-
-
-
-
-
-
-#[derive(Debug, Serialize, Deserialize, Default)]
-pub struct Investimento {
-    pub id: i32,
-    pub descricao: String,
-    pub valor: f32,
-    pub operacao: Operacao,
-    pub tipo_investimento: TipoInvestimento,
-    pub mes: u32,
-    pub ano: u32,
-}
-
-impl Investimento {
-    pub fn new(id: i32, descricao: String, valor: f32, operacao: Operacao, tipo_investimento: TipoInvestimento, mes: u32, ano: u32) -> Investimento {
-        Investimento {
-            id: id,
-            descricao: descricao,
-            valor: valor,
-            operacao: operacao,
-            tipo_investimento: tipo_investimento,
-            mes: mes,
-            ano: ano,
+        if self.year.is_none() == false {
+            println!("Year: {:?}", self.year.unwrap());
         }
-    }
-    
-    pub fn listar(&self) {
-        println!("-------------------------");
-        println!("Id: {:?}", &self.id);
-        println!("Descrição: {:?}", &self.descricao);
-        println!("Valor: {:?}", &self.valor);
-        println!("Operação: {:?}", &self.operacao);
-        println!("Mês: {:?}", &self.mes);
         println!("-------------------------");
     }
-
-    pub fn detalhe(&self) {
-        println!("-------------------------");
-        println!("Id: {:?}", self.id);
-        println!("Descrição: {:?}", self.descricao);
-        println!("Valor: {:?}", self.valor);
-        println!("Operação: {:?}", self.operacao);
-        println!("Mês: {:?}", self.mes);
-        println!("Ano: {:?}", self.ano);
-        println!("Tipo de investimento: {:?}", self.tipo_investimento);
-        println!("-------------------------");
-    }
-}
-
-
-#[derive(Debug, Serialize, Deserialize, PartialEq, Default)]
-pub enum TipoInvestimento {
-    #[default] Selic,
-    Bitcoin
 }

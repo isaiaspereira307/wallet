@@ -1,16 +1,12 @@
-use crate::walletlib::files::{
-    ler_input,
+use crate::algorithms::algorithms::{calcula_comunhao_bens, calcular_receita_despesa};
+use crate::filemanager::filemanager::{
+    read_input,
     adicionar,
-    remover,
-    listar,
-    editar,
-    detalhar,
+    remove,
+    to_detail,
+    to_list,
+    edit
 };
-use super::algorithms::{
-    calcula_comunhao_bens,
-    calcular_receita_despesa,
-};
-
 
 
 pub fn header() {
@@ -38,7 +34,7 @@ pub fn menu_principal() {
     header();
     println!("1 - Carteira");
     println!("3 - Sair");
-    let opcao = ler_input("Digite uma opção: ");
+    let opcao = read_input("Digite uma opção: ");
     match opcao.trim().parse::<i32>() {
         Ok(1) => {
             menu_carteira();
@@ -63,23 +59,23 @@ fn menu_carteira() {
     println!("6 - Voltar");
     println!();
     println!("7 - Sair");
-    let opcao = ler_input("Digite uma opção: ");
+    let opcao = read_input("Digite uma opção: ");
     match opcao.trim().parse::<i32>() {
         Ok(1) => adicionar(),
         Ok(2) => {
-            let id = ler_input("Digite o id da transação: ");
-            remover(id.trim().parse::<i32>().unwrap());
+            let id = read_input("Digite o id da transação: ");
+            remove(id.trim().parse::<i32>().unwrap());
         },
         Ok(3) => {
-            listar();
+            to_list();
         },
         Ok(4) => {
-            let id = ler_input("Digite o id da transação: ");
-            editar(id.trim().parse::<i32>().unwrap());
+            let id = read_input("Digite o id da transação: ");
+            edit(id.trim().parse::<i32>().unwrap());
         },
         Ok(5) => {
-            let id = ler_input("Digite o id da transação: ");
-            detalhar(id.trim().parse::<i32>().unwrap());
+            let id = read_input("Digite o id da transação: ");
+            to_detail(id.trim().parse::<i32>().unwrap());
         }
         Ok(6) => {
             menu_principal();
@@ -92,29 +88,4 @@ fn menu_carteira() {
             println!("Opção inválida");
         }
     }
-}
-
-pub fn mostrar_opcoes_tipo() {
-    println!("-------------------------");
-    println!("1 - Valor Fixo");
-    println!("2 - Valor Variável");
-    println!("Digite uma opção de tipo: ");
-}
-
-pub fn mostrar_opcoes_operacao() {
-    println!("-------------------------");
-    println!("1 - Despesa");
-    println!("2 - Receita");
-}
-
-pub fn mostrar_opcoes_categoria() {
-    println!("-------------------------");
-    println!("1 - Salário");
-    println!("2 - Renda Extra");
-    println!("3 - Alimentação");
-    println!("4 - Transporte");
-    println!("5 - Lazer");
-    println!("6 - Educação");
-    println!("7 - Saúde");
-    println!("8 - Outros");
 }
